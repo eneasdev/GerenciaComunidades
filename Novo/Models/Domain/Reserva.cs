@@ -1,14 +1,17 @@
 ﻿using Novo.Models.Enums;
 
-namespace Novo.Models
+namespace Novo.Models.Domain
 {
     public class Reserva
     {
-        public Reserva(DateTime dataInicial, DateTime dataFinal, Status status)
+        public Reserva(DateTime dataInicial, DateTime dataFinal, int idAmbiente, int idUsuario)
         {
-            Status = status;
+            Status = Status.Reservado;
+            IdAmbiente = idAmbiente;
+            IdUsuario = idUsuario;
             DataInicial = dataInicial;
             DataFinal = dataFinal;
+            Reservar();
         }
 
         public int IdReserva { get; set; }
@@ -20,5 +23,10 @@ namespace Novo.Models
         public Ambiente Ambiente { get; set; }
         public int IdUsuario { get; set; }
         public Usuario Usuario { get; set; }
+
+        private void Reservar()
+        {
+            this.Ambiente.Status = Status.Reservado;
+        }
     }
 }

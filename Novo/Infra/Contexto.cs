@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Novo.Models;
+using Novo.Models.Domain;
 
 namespace Novo.Infra
 {

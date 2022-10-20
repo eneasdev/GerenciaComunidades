@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Novo.Infra;
-using Novo.Models;
+using Novo.Models.Domain;
 using System.Security.Claims;
 
 namespace Novo.Controllers

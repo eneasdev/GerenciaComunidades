@@ -1,9 +1,14 @@
 ﻿using Novo.Models.Enums;
 
-namespace Novo.Models
+namespace Novo.Models.Domain
 {
     public class Usuario
     {
+        public Usuario()
+        {
+
+        }
+
         public Usuario(string login, string senha, NivelAcesso nivelAcesso = NivelAcesso.Normal)
         {
             Login = login;

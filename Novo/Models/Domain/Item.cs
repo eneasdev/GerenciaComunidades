@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using Novo.Models.Enums;
 
-namespace Novo.Models
+namespace Novo.Models.Domain
 {
     public class Item
     {

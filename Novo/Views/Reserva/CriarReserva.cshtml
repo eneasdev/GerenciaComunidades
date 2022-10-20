@@ -1,7 +1,7 @@
 ﻿@{
-    ViewData["Title"] = "Ambientes";
+    ViewData["Title"] = "Reservas";
 }
-@model List<Novo.Models.Ambiente>
+@model List<Novo.Models.Domain.Ambiente>
 
 <table class="table">
     <thead>
@@ -11,9 +11,6 @@
             </th>
             <th>
                 <h3>Status</h3>
-            </th>
-            <th>
-                <h3>Items</h3>
             </th>
         </tr>
     </thead>
@@ -34,9 +31,7 @@
                     }
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@ambiente.IdAmbiente">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@ambiente.IdAmbiente">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@ambiente.IdAmbiente">Delete</a>
+                    @Html.ActionLink("Reservar", "Reservar", new { id = ambiente.IdAmbiente })
                 </td>
             </tr>
         }

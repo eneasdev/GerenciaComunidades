@@ -1,10 +1,10 @@
 ﻿using Novo.Models.Enums;
 
-namespace Novo.Models
+namespace Novo.Models.Domain
 {
     public class Ambiente
     {
-        public Ambiente( string descricao, Status status = Status.Livre)
+        public Ambiente(string descricao, Status status = Status.Livre)
         {
             Descricao = descricao;
             Status = status;
@@ -21,7 +21,7 @@ namespace Novo.Models
         {
             if (quantidade.HasValue)
             {
-                for(int i = 0; i < quantidade; i++)
+                for (int i = 0; i < quantidade; i++)
                 {
                     var descricao = $"Acento " + i;
                     Items.Add(new Item(descricao, Status.Livre));

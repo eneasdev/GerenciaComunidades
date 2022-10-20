@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Novo.Infra;
-using Novo.Models;
 
 namespace Novo.Controllers
 {
@@ -33,13 +31,6 @@ namespace Novo.Controllers
             ViewBag.usuario = usuario;
             ViewBag.autenticado = autenticado;
             return View();
-        }
-
-        [Authorize]
-        public IActionResult Ambiente()
-        {
-            var ambientes = _context.Ambientes.ToList();
-            return View(ambientes);
         }
 
         //[Authorize]
