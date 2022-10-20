@@ -1,38 +1,57 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Novo.Infra;
 using Novo.Models;
-using System.Diagnostics;
 
 namespace Novo.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-        private Contexto _context;
+        private readonly Contexto _context;
 
-        public HomeController(ILogger<HomeController> logger, Contexto context)
+        public HomeController(Contexto context)
         {
-            _logger = logger;
             _context = context;
         }
 
-        public IActionResult Index(string login, string senha)
+        public IActionResult Index()
         {
-            var usuario = new Usuario(login, senha);
+            var usuario = "Anônimo";
+            var autenticado = false;
 
-            _context.Usuarios.Add(usuario);
-            _context.SaveChanges();
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                usuario = HttpContext.User.Identity.Name;
+                autenticado = true;
+            }
+            else
+            {
+                usuario = "Não Logado";
+                autenticado = false;
+            }
 
-            var existe = _context.Usuarios.Any(u => u.Login == login);
-
+            ViewBag.usuario = usuario;
+            ViewBag.autenticado = autenticado;
             return View();
         }
 
-        public IActionResult Login(string Login, string Senha)
+        [Authorize]
+        public IActionResult Ambiente()
         {
-            return View();
+            var ambientes = _context.Ambientes.ToList();
+            return View(ambientes);
         }
+
+        //[Authorize]
+        //public IActionResult CriarUsuario(string login, string senha)
+        //{
+
+        //    var usuario = new Usuario(login, senha);
+
+        //    _context.Usuarios.Add(usuario);
+        //    _context.SaveChanges();
+
+        //    return View();
+        //}
     }
 }
