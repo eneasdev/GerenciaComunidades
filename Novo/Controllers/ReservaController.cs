@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Novo.Infra;
 using Novo.Models.Domain;
 using Novo.Models.ReservaModels;
+using Novo.Services;
 
 namespace Novo.Controllers
 {
@@ -10,10 +11,13 @@ namespace Novo.Controllers
     public class ReservaController : Controller
     {
         private readonly Contexto _context;
+        private readonly IReservaService _reservaService;
 
-        public ReservaController(Contexto context)
+        public ReservaController(Contexto context, IReservaService reservaService)
         {
             _context = context;
+            _reservaService = reservaService;
+            _reservaService.ValidarStatusReservas();
         }
 
         [HttpGet]
@@ -46,6 +50,8 @@ namespace Novo.Controllers
         [HttpPost]
         public IActionResult Reservar(ReservaUsuarioModel reservaUsuarioModel)
         {
+            var ambiente = _context.Ambientes.FirstOrDefault(x => x.IdAmbiente == reservaUsuarioModel.IdAmbiente);
+
             var novaReserva = new Reserva(
                 dataInicial: reservaUsuarioModel.DataInicial,
                 dataFinal: reservaUsuarioModel.DataFinal,
@@ -53,10 +59,12 @@ namespace Novo.Controllers
                 idUsuario: reservaUsuarioModel.IdUsuario
                 );
 
+            ambiente.Reservar();
+
             _context.Reservas.AddAsync(novaReserva);
             _context.SaveChanges();
 
-            return Ok();
+            return RedirectToAction("CriarReserva");
         }
     }
 }

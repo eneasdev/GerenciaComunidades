@@ -11,7 +11,6 @@ namespace Novo.Models.Domain
             IdUsuario = idUsuario;
             DataInicial = dataInicial;
             DataFinal = dataFinal;
-            Reservar();
         }
 
         public int IdReserva { get; set; }
@@ -24,9 +23,5 @@ namespace Novo.Models.Domain
         public int IdUsuario { get; set; }
         public Usuario Usuario { get; set; }
 
-        private void Reservar()
-        {
-            this.Ambiente.Status = Status.Reservado;
-        }
     }
 }

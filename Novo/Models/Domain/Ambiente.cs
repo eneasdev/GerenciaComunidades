@@ -28,5 +28,10 @@ namespace Novo.Models.Domain
                 }
             }
         }
+
+        public void Reservar()
+        {
+            this.Status = Status.Reservado;
+        }
     }
 }

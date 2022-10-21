@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Novo.Infra;
+using Novo.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,9 +20,9 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<Contexto>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Contexto")));
 
+builder.Services.AddScoped<IReservaService, ReservaService>();
+
 var app = builder.Build();
-
-
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
