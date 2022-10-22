@@ -4,6 +4,7 @@ using Novo.Infra;
 using Novo.Models.Domain;
 using Novo.Models.ReservaModels;
 using Novo.Services;
+using System.Linq;
 
 namespace Novo.Controllers
 {
@@ -18,6 +19,14 @@ namespace Novo.Controllers
             _context = context;
             _reservaService = reservaService;
             _reservaService.ValidarStatusReservas();
+        }
+
+        [HttpGet]
+        public IActionResult CriarReservar()
+        {
+            var reservas = _context.Reservas.ToList();
+
+            return View(reservas);
         }
 
         [HttpGet]
@@ -44,11 +53,19 @@ namespace Novo.Controllers
         {
             var ambiente = _context.Ambientes.FirstOrDefault(x => x.IdAmbiente == reservarAmbienteModel.IdAmbiente);
 
+            if (ambiente is null) return NotFound();
+
+
+            // pensar numa validação para periodo de tempo.
+            var reservaExiste = _context.Reservas.Any(x => x.DataFinal <= reservarAmbienteModel.DataInicial);
+
+            if (reservaExiste) return BadRequest();
+
             var novaReserva = new Reserva(
-                dataInicial: reservarAmbienteModel.DataInicial,
-                dataFinal: reservarAmbienteModel.DataFinal,
-                idAmbiente: reservarAmbienteModel.IdAmbiente,
-                idUsuario: reservarAmbienteModel.IdUsuario
+                    dataInicial: reservarAmbienteModel.DataInicial,
+                    dataFinal: reservarAmbienteModel.DataFinal,
+                    idAmbiente: reservarAmbienteModel.IdAmbiente,
+                    idUsuario: reservarAmbienteModel.IdUsuario
                 );
 
             ambiente.Reservar();
@@ -72,11 +89,13 @@ namespace Novo.Controllers
         {
             var item = _context.Acentos.FirstOrDefault(x => x.IdItem == reservarItemModel.IdItem);
 
+            if (item is null) return NotFound();
+
             var novaReserva = new Reserva(
-                dataInicial: reservarItemModel.DataInicial,
-                dataFinal: reservarItemModel.DataFinal,
-                idItem: reservarItemModel.IdItem,
-                idUsuario: reservarItemModel.IdUsuario
+                    dataInicial: reservarItemModel.DataInicial,
+                    dataFinal: reservarItemModel.DataFinal,
+                    idItem: reservarItemModel.IdItem,
+                    idUsuario: reservarItemModel.IdUsuario
                 );
 
             item.Reservar();

@@ -15,18 +15,33 @@ namespace Novo.Services
         {
             var ambientes = _context.Ambientes.ToList();
 
+            var items = _context.Acentos.ToList();
+
             var reservas = _context.Reservas.ToList();
 
             foreach (var reserva in reservas)
             {
-                var ambiente = ambientes.FirstOrDefault(x => x.IdAmbiente == reserva.IdAmbiente);
-
-                if (reserva.DataFinal <= DateTime.Now)
+                if (reserva.IdAmbiente != null)
                 {
-                    ambiente.Status = Models.Enums.Status.Livre;
-                }
+                    var ambiente = ambientes.FirstOrDefault(ambienteAtual => ambienteAtual.IdAmbiente == reserva.IdAmbiente);
 
-                _context.Ambientes.Update(ambiente);
+                    if (ambiente != null && reserva.DataFinal <= DateTime.Now)
+                    {
+                        ambiente.Status = Models.Enums.Status.Livre;
+                        _context.Ambientes.Update(ambiente);
+                    }
+                }
+                
+                if (reserva.IdItem != null)
+                {
+                    var item = items.FirstOrDefault(x => x.IdItem == reserva.IdItem);
+
+                    if (item != null && reserva.DataFinal <= DateTime.Now)
+                    {
+                        item.Status = Models.Enums.Status.Livre;
+                        _context.Acentos.Update(item);
+                    }
+                }
             }
 
             _context.SaveChanges();
