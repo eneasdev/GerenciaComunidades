@@ -21,14 +21,14 @@ namespace Novo.Controllers
         }
 
         [HttpGet]
-        public IActionResult Reservar(int id)
+        public IActionResult ReservarAmbiente(int id)
         {
             var nome = HttpContext.User.Identity.Name;
             var user = _context.Usuarios.FirstOrDefault(x => x.Login == nome);
 
             var ambienteBd = _context.Ambientes.FirstOrDefault(x => x.IdAmbiente == id);
 
-            var ambiente = new ReservaUsuarioModel
+            var ambiente = new ReservarAmbienteViewModel
             {
                 Descricao = ambienteBd.Descricao,
                 Status = ambienteBd.Status,
@@ -40,18 +40,46 @@ namespace Novo.Controllers
         }
 
         [HttpPost]
-        public IActionResult Reservar(ReservaUsuarioModel reservaUsuarioModel)
+        public IActionResult ReservarAmbiente(ReservarAmbienteViewModel reservarAmbienteModel)
         {
-            var ambiente = _context.Ambientes.FirstOrDefault(x => x.IdAmbiente == reservaUsuarioModel.IdAmbiente);
+            var ambiente = _context.Ambientes.FirstOrDefault(x => x.IdAmbiente == reservarAmbienteModel.IdAmbiente);
 
             var novaReserva = new Reserva(
-                dataInicial: reservaUsuarioModel.DataInicial,
-                dataFinal: reservaUsuarioModel.DataFinal,
-                idAmbiente: reservaUsuarioModel.IdAmbiente,
-                idUsuario: reservaUsuarioModel.IdUsuario
+                dataInicial: reservarAmbienteModel.DataInicial,
+                dataFinal: reservarAmbienteModel.DataFinal,
+                idAmbiente: reservarAmbienteModel.IdAmbiente,
+                idUsuario: reservarAmbienteModel.IdUsuario
                 );
 
             ambiente.Reservar();
+
+            _context.Reservas.AddAsync(novaReserva);
+            _context.SaveChanges();
+
+            return RedirectToAction("CriarReserva");
+        }
+
+        [HttpGet]
+        public IActionResult ReservarItem(int id)
+        {
+            var item = _context.Acentos.FirstOrDefault(x => x.IdItem == id);
+
+            return View(item);
+        }
+
+        [HttpPost]
+        public IActionResult ReservarItem(ReservarItemViewModel reservarItemModel)
+        {
+            var item = _context.Acentos.FirstOrDefault(x => x.IdItem == reservarItemModel.IdItem);
+
+            var novaReserva = new Reserva(
+                dataInicial: reservarItemModel.DataInicial,
+                dataFinal: reservarItemModel.DataFinal,
+                idItem: reservarItemModel.IdItem,
+                idUsuario: reservarItemModel.IdUsuario
+                );
+
+            item.Reservar();
 
             _context.Reservas.AddAsync(novaReserva);
             _context.SaveChanges();

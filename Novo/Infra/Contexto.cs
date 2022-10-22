@@ -63,6 +63,11 @@ namespace Novo.Infra
                     .WithMany()
                     .HasForeignKey(d => d.IdUsuario)
                     .HasConstraintName("FK_Reserva_Usuario");
+
+                entity.HasOne(d => d.Item)
+                    .WithMany()
+                    .HasForeignKey(d => d.IdItem)
+                    .HasConstraintName("FK_Reserva_Item"); //TODO - Criar FK no banco de dados.
             });
 
             modelBuilder.Entity<Usuario>(entity =>

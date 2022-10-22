@@ -2,9 +2,8 @@
 
 namespace Novo.Models.ReservaModels
 {
-    public class ReservaUsuarioModel
+    public class ReservarAmbienteViewModel
     {
-
         public DateTime DataInicial { get; set; }
         public DateTime DataFinal { get; set; }
         public int IdAmbiente { get; set; }

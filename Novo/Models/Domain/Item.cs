@@ -17,7 +17,11 @@ namespace Novo.Models.Domain
 
 
         public int IdAmbiente { get; set; }
-        [JsonIgnore]
         public virtual Ambiente Ambiente { get; set; }
+
+        public void Reservar()
+        {
+            this.Status = Status.Reservado;
+        }
     }
 }

@@ -1,11 +1,11 @@
 ﻿@using Novo.Models.ReservaModels
 
-@model ReservaUsuarioModel
+@model ReservarAmbienteViewModel
 
 
 <div class="row">
     <div class="col-md-4">
-        <form method="post" asp-action="Reservar">
+        <form method="post" asp-action="ReservarAmbiente">
             <input type="hidden" name="IdAmbiente" value="@Model.IdAmbiente"/>
             <input type="hidden" name="IdUsuario" value="@Model.IdUsuario"/>
             <h2>Reservar</h2>
