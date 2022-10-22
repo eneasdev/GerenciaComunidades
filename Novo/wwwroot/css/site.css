@@ -16,3 +16,8 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+div.col-md-4 {
+    margin-left: auto;
+    margin-right: auto;
+}

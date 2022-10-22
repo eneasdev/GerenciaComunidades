@@ -23,7 +23,7 @@ namespace Novo.Models.Domain
             {
                 for (int i = 0; i < quantidade; i++)
                 {
-                    var descricao = $"Acento " + i;
+                    var descricao = $"Item " + i;
                     Items.Add(new Item(descricao, Status.Livre));
                 }
             }

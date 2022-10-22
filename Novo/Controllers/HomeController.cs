@@ -24,7 +24,7 @@ namespace Novo.Controllers
             }
             else
             {
-                usuario = "Não Logado";
+                usuario = "";
                 autenticado = false;
             }
 

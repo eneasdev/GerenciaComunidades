@@ -21,14 +21,6 @@ namespace Novo.Controllers
         }
 
         [HttpGet]
-        public IActionResult CriarReserva()
-        {
-            var ambientes = _context.Ambientes.ToList();
-
-            return View(ambientes);
-        }
-
-        [HttpGet]
         public IActionResult Reservar(int id)
         {
             var nome = HttpContext.User.Identity.Name;
