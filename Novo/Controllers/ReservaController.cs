@@ -4,7 +4,6 @@ using Novo.Infra;
 using Novo.Models.Domain;
 using Novo.Models.ReservaModels;
 using Novo.Services;
-using System.Linq;
 
 namespace Novo.Controllers
 {
@@ -77,6 +76,18 @@ namespace Novo.Controllers
         }
 
         [HttpGet]
+        public IActionResult AtualizarReservaAmbiente(int id)
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult AtualizarReservaAmbiente()
+        {
+            return View();
+        }
+
+        [HttpGet]
         public IActionResult ReservarItem(int id)
         {
             var item = _context.Acentos.FirstOrDefault(x => x.IdItem == id);
@@ -104,6 +115,18 @@ namespace Novo.Controllers
             _context.SaveChanges();
 
             return RedirectToAction("CriarReserva");
+        }
+
+        [HttpGet]
+        public IActionResult AtualizarReservaItem(int id)
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult AtualizarReservaItem()
+        {
+            return View();
         }
     }
 }
