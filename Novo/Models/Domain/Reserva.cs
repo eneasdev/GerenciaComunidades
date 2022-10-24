@@ -26,5 +26,15 @@ namespace Novo.Models.Domain
         public int IdUsuario { get; set; }
         public Usuario Usuario { get; set; }
 
+        public Reserva Reservar(DateTime dataInicial, DateTime dataFinal, int idUsuario, int idAmbiente, int idItem)
+        {
+            return new Reserva(dataInicial, dataFinal, idUsuario, idAmbiente, idItem);
+        }
+
+        public void Atualizar(DateTime? dataInicial, DateTime? dataFinal)
+        {
+            this.DataInicial = dataInicial ?? this.DataInicial;
+            this.DataFinal = dataFinal ?? this.DataFinal;
+        }
     }
 }

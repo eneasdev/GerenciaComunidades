@@ -33,5 +33,10 @@ namespace Novo.Models.Domain
         {
             this.Status = Status.Reservado;
         }
+
+        public void Desativar()
+        {
+            this.Status = Status.Desativado;
+        }
     }
 }

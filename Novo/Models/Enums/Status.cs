@@ -3,6 +3,7 @@
     public enum Status
     {
         Livre = 1,
-        Reservado = 2
+        Reservado = 2,
+        Desativado = 3
     }
 }

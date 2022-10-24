@@ -78,13 +78,19 @@ namespace Novo.Controllers
         [HttpGet]
         public IActionResult AtualizarReservaAmbiente(int id)
         {
-            return View();
+            return View(_context.Reservas.FirstOrDefault(x => x.IdAmbiente == id));
         }
 
         [HttpPost]
-        public IActionResult AtualizarReservaAmbiente()
+        public IActionResult AtualizarReservaAmbiente(AtualizarReservaAmbienteViewModel model)
         {
-            return View();
+            var reserva = _context.Reservas.FirstOrDefault(x => x.IdReserva == model.IdReserva);
+
+            if(reserva == null) return NotFound();
+
+            reserva.Atualizar(model.DataInicial, model.DataFinal);
+
+            return RedirectToAction("CriarReserva");
         }
 
         [HttpGet]
