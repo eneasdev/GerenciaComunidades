@@ -1,8 +1,8 @@
-﻿@{
-    ViewData["Title"] = "Reservas";
-}
-@model List<Novo.Models.Domain.Ambiente>
+﻿@model List<Novo.Models.Domain.Ambiente>
 
+<div>
+    <a class="nav-link text-dark" asp-area="" asp-controller="Ambiente" asp-action="CriarAmbiente"><button>Novo ambiente</button></a>
+</div>
 <table class="table">
     <thead>
         <tr>
@@ -34,12 +34,15 @@
                     }
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@ambiente.IdAmbiente">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@ambiente.IdAmbiente">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@ambiente.IdAmbiente">Delete</a>
+                    @Html.ActionLink("Editar", "AtualizarAmbiente", new { id = ambiente.IdAmbiente })
+                </td>
+                <td>
+                    <form action="DesativarAmbiente" method="post">
+                        <input type="hidden" name="id" value="@ambiente.IdAmbiente" />
+                        <input type="submit" value="Desativar" />
+                    </form>
                 </td>
             </tr>
         }
     </tbody>
 </table>
-

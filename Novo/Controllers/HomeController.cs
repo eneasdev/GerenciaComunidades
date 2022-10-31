@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Novo.Infra;
+using Novo.Models.Enums;
 
 namespace Novo.Controllers
 {

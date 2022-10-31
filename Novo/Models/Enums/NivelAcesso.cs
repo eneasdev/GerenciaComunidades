@@ -3,6 +3,6 @@
     public enum NivelAcesso
     {
         Admin = 1,
-        Normal = 2
+        Usuario = 2
     }
 }

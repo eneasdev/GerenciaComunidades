@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Novo.Infra;
 using Novo.Models.Domain;
+using Novo.Models.Enums;
 using Novo.Models.ReservaModels;
 using Novo.Services;
 
@@ -21,11 +24,19 @@ namespace Novo.Controllers
         }
 
         [HttpGet]
-        public IActionResult CriarReservar()
+        public IActionResult Reservar()
         {
-            var reservas = _context.Reservas.ToList();
+            return View();
+        }
 
-            return View(reservas);
+        [HttpGet]
+        public IActionResult ListarAmbientes()
+        {
+            var ambientes = _context.Ambientes.ToList();
+
+            if (ambientes is null) return View(new List<Ambiente>());
+
+            return View(ambientes);
         }
 
         [HttpGet]
@@ -47,6 +58,7 @@ namespace Novo.Controllers
             return View(ambiente);
         }
 
+        [Authorize("Usuario")]
         [HttpPost]
         public IActionResult ReservarAmbiente(ReservarAmbienteViewModel reservarAmbienteModel)
         {
@@ -91,6 +103,23 @@ namespace Novo.Controllers
             reserva.Atualizar(model.DataInicial, model.DataFinal);
 
             return RedirectToAction("CriarReserva");
+        }
+
+        [HttpGet]
+        public IActionResult ListarItems()
+        {
+            var ambientes = _context.Ambientes.Where(x => x.Status == Status.Reservado).Include(x => x.Items).ToList();
+
+            if (ambientes is null) return View(new List<Ambiente>());
+
+            IEnumerable<SelectListItem> itens = from ambiente in ambientes
+                                                select new SelectListItem
+                                                {
+                                                    Text = ambiente.Descricao,
+                                                    Value = ambiente.IdAmbiente.ToString()
+                                                };
+
+            return View(itens);
         }
 
         [HttpGet]

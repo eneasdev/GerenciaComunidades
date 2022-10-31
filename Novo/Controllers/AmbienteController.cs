@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Novo.Infra;
 using Novo.Models.AmbienteModels;
 using Novo.Models.Domain;
+using Novo.Models.Enums;
 
 namespace Novo.Controllers
 {
@@ -16,10 +18,19 @@ namespace Novo.Controllers
         }
 
         [HttpGet]
+        public IActionResult Ambientes()
+        {
+            var ambientes = _context.Ambientes.Include(a => a.Items)
+                .Where(x => x.Status != Status.Desativado)
+                .ToList();
+
+            return View(ambientes);
+        }
+
+        [HttpGet]
         public IActionResult CriarAmbiente()
         {
-            var ambientes = _context.Ambientes.ToList();
-            return View(ambientes);
+            return View();
         }
 
         [HttpPost]
@@ -31,14 +42,22 @@ namespace Novo.Controllers
             _context.Ambientes.Add(novoAmbiente);
             _context.SaveChanges();
 
-            return View();
+            return View(ViewData["Ambiente criado com sucesso!"]);
         }
 
         [HttpGet]
         public IActionResult AtualizarAmbiente(int id)
         {
             var ambiente = _context.Ambientes.FirstOrDefault(x => x.IdAmbiente == id);
-            return View(ambiente);
+            if (ambiente == null) return View();
+            var ambienteView = new AtualizarAmbienteViewModel()
+            {
+                Descricao = ambiente.Descricao,
+                IdAmbiente = ambiente.IdAmbiente,
+                Items = ambiente.Items.ToList()
+            };
+
+            return View(ambienteView);
         }
 
         [HttpPost]
@@ -68,6 +87,20 @@ namespace Novo.Controllers
             _context.SaveChanges();
 
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult DesativarAmbiente(int id)
+        {
+            var ambiente = _context.Ambientes.FirstOrDefault(x => x.IdAmbiente == id);
+
+            if(ambiente is null) return NotFound("Não encontrado.");
+
+            ambiente.Desativar();
+            _context.Ambientes.Update(ambiente);
+            _context.SaveChanges();
+
+            return RedirectToAction("Ambientes");
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Novo.Models.Domain
 
         }
 
-        public Usuario(string login, string senha, NivelAcesso nivelAcesso = NivelAcesso.Normal)
+        public Usuario(string login, string senha, NivelAcesso nivelAcesso = NivelAcesso.Usuario)
         {
             Login = login;
             Senha = senha;

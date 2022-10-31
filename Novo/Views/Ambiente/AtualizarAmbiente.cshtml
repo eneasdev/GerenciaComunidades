@@ -1,0 +1,35 @@
+﻿@using Novo.Models.AmbienteModels
+
+@model AtualizarAmbienteViewModel
+
+
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" asp-action="AtualizarAmbiente">
+            <input type="hidden" name="IdAmbiente" value="@Model.IdAmbiente" />
+            <h2>Atualizar Ambiente</h2>
+            <div class="form-group">
+                <p>
+                    Nome:
+                    @Html.DisplayFor(model => model.Descricao)
+                </p>
+            </div>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Descricao" class="control-label"></label>
+                <input type="text" asp-for="Descricao" class="form-control" placeholder="@Model.Descricao"/>
+                <span asp-validation-for="Descricao" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="QtdNovosItems" class="control-label">Quantidade de novos items</label>
+                <input type="number" asp-for="QtdNovosItems" class="form-control" />
+                <span asp-validation-for="QtdNovosItems" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Confirmar" class="btn btn-default btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<br />
+<h2>@ViewData["Message"]</h2>
