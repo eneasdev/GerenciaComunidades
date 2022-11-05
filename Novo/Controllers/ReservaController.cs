@@ -20,7 +20,7 @@ namespace Novo.Controllers
         {
             _context = context;
             _reservaService = reservaService;
-            _reservaService.ValidarStatusReservas();
+            _reservaService.ResetarReservas();
         }
 
         [HttpGet]
@@ -32,11 +32,21 @@ namespace Novo.Controllers
         [HttpGet]
         public IActionResult ListarAmbientes()
         {
-            var ambientes = _context.Ambientes.ToList();
+            var reservas = _context.Reservas
+                .Include(x => x.Ambiente)
+                .Where(x => x.IdAmbiente == x.Ambiente.IdAmbiente).ToList();
 
-            if (ambientes is null) return View(new List<Ambiente>());
+            var listaAmbientes = reservas.Select(x => new ListarAmbientesViewModel
+            {
+                IdAmbiente = x.IdAmbiente.GetValueOrDefault(),
+                Descricao = x.Ambiente.Descricao,
+                Status = x.Status,
+                QtdItens = x.Ambiente.Items.Count()
+            }).ToList();
 
-            return View(ambientes);
+            var algo = reservas.Distinct();
+
+            return View(listaAmbientes);
         }
 
         [HttpGet]
@@ -58,7 +68,6 @@ namespace Novo.Controllers
             return View(ambiente);
         }
 
-        [Authorize("Usuario")]
         [HttpPost]
         public IActionResult ReservarAmbiente(ReservarAmbienteViewModel reservarAmbienteModel)
         {
@@ -67,10 +76,13 @@ namespace Novo.Controllers
             if (ambiente is null) return NotFound();
 
 
-            // pensar numa validação para periodo de tempo.
-            var reservaExiste = _context.Reservas.Any(x => x.DataFinal <= reservarAmbienteModel.DataInicial);
+            var reservaExiste = _reservaService.ReservaExiste(reservarAmbienteModel);
 
-            if (reservaExiste) return BadRequest();
+            if (reservaExiste)
+            {
+                TempData["ErrorMessage"] = "Reserva Inválida";
+                return BadRequest();
+            }
 
             var novaReserva = new Reserva(
                     dataInicial: reservarAmbienteModel.DataInicial,
@@ -84,7 +96,8 @@ namespace Novo.Controllers
             _context.Reservas.AddAsync(novaReserva);
             _context.SaveChanges();
 
-            return RedirectToAction("CriarReserva");
+            TempData["Message"] = "Reservado com sucesso";
+            return RedirectToAction("ListarAmbientes");
         }
 
         [HttpGet]
@@ -105,21 +118,27 @@ namespace Novo.Controllers
             return RedirectToAction("CriarReserva");
         }
 
+        //[HttpGet]
+        //public IActionResult ListarItems()
+        //{
+        //    var ambientes = _context.Ambientes.Where(x => x.Status == Status.Reservado).Include(x => x.Items).ToList();
+
+        //    var viewModel = new ListarItemsViewModel();
+        //    viewModel.Ambientes = ambientes.ToList();
+
+        //    return View(viewModel);
+        //}
+
         [HttpGet]
-        public IActionResult ListarItems()
+        public IActionResult ListarItems(ListarItemsViewModel viewModel)
         {
-            var ambientes = _context.Ambientes.Where(x => x.Status == Status.Reservado).Include(x => x.Items).ToList();
+            var ambientes = _context.Ambientes.Where(x => x.Status == Status.Reservado).ToList();
 
-            if (ambientes is null) return View(new List<Ambiente>());
+            var model = new ListarItemsViewModel();
 
-            IEnumerable<SelectListItem> itens = from ambiente in ambientes
-                                                select new SelectListItem
-                                                {
-                                                    Text = ambiente.Descricao,
-                                                    Value = ambiente.IdAmbiente.ToString()
-                                                };
+            model.Ambientes = new SelectList(ambientes, "Descricao", "Descricao");
 
-            return View(itens);
+            return View(model);
         }
 
         [HttpGet]

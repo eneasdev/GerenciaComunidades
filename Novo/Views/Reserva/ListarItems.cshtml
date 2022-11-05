@@ -1,38 +1,15 @@
-﻿@using Novo.Models.Domain
+﻿@using Novo.Models.ReservaModels
+
 @{
     ViewData["Title"] = "Reservas";
 }
-@model IEnumerable<SelectListItem>
+@model ListarItemsViewModel
 
-<table class="table">
-    <thead>
-    <select name="Ambiente" asp-items="Model">
-        @foreach( var ambiente in Model){
-                <option value="ambiente.IdAmbiente">Escolha um local</option>
-        }
-    </select>
-        <tr>
-            <th>
-                <h3>Descricao</h3>
-            </th>
-            <th>
-                <h3>Status</h3>
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                
-                @*<td>
-                    @Html.DisplayFor(modelItem => item.Status)
-                </td>
-                <td>
-                    @Html.ActionLink("ListarItems", "ReservarItem", new { id = item.IdItem })
-                </td>*@
-            </tr>
-        }
-    </tbody>
-</table>
+@using (Html.BeginForm()){
+    <fieldset>
+        <div class="editor-label">
+            @Html.DropDownListFor(model => model.Ambientes, null, "Selecione um ambiente", new { @class = "form-control", @value = "0" })
+        </div>
+    </fieldset>
+}
 

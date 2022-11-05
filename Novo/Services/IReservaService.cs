@@ -1,7 +1,10 @@
-﻿namespace Novo.Services
+﻿using Novo.Models.ReservaModels;
+
+namespace Novo.Services
 {
     public interface IReservaService
     {
-        void ValidarStatusReservas();
+        void ResetarReservas();
+        bool ReservaExiste(ReservarAmbienteViewModel candidata);
     }
 }

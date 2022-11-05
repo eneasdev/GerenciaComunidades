@@ -9,34 +9,34 @@
             <input type="hidden" name="IdAmbiente" value="@Model.IdAmbiente"/>
             <input type="hidden" name="IdUsuario" value="@Model.IdUsuario"/>
             <h2>Reservar</h2>
-            <div class="form-group">
+            <div>
                 <p>
                     Nome: 
                     @Html.DisplayFor(model => model.Descricao)
                 </p>
             </div>
-            <div class="form-group">
+            <div>
                 <p>
                     Status: 
                     @Html.DisplayFor(model => model.Status)
                 </p>
             </div>
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="DataInicial" class="control-label"></label>
-                <input type="datetime-local" asp-for="DataInicial" class="form-control" />
+            <div>
+                <label asp-for="DataInicial" class="control-label"></label><br />
+                <input type="datetime-local" asp-for="DataInicial" data-val-required="Data inicial é obrigatória." value=""/><br />
                 <span asp-validation-for="DataInicial" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="DataFinal" class="control-label"></label>
-                <input type="datetime-local" asp-for="DataFinal" class="form-control" />
+            <div>
+                <label asp-for="DataFinal" class="control-label"></label><br />
+                <input type="datetime-local" asp-for="DataFinal" data-val-required="Data final é obrigatória." value="" /><br />
                 <span asp-validation-for="DataFinal" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div>
                 <input type="submit" value="Confirmar" class="btn btn-default btn-primary" />
             </div>
         </form>
     </div>
 </div>
 <br />
-<h2>@ViewData["Message"]</h2>
+<h2>@TempData["ErrorMessage"]</h2>

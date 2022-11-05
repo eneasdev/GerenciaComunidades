@@ -1,4 +1,6 @@
 ﻿using Novo.Infra;
+using Novo.Models.ReservaModels;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Novo.Services
 {
@@ -11,7 +13,7 @@ namespace Novo.Services
             _context = context;
         }
 
-        public void ValidarStatusReservas()
+        public void ResetarReservas()
         {
             var ambientes = _context.Ambientes.ToList();
 
@@ -45,6 +47,21 @@ namespace Novo.Services
             }
 
             _context.SaveChanges();
+        }
+
+        public bool ReservaExiste(ReservarAmbienteViewModel candidata)
+        {
+            var reserva = _context.Reservas
+                .FirstOrDefault(x => 
+                x.IdAmbiente == candidata.IdAmbiente &&
+                x.DataInicial <= candidata.DataInicial &&
+                x.DataFinal >= candidata.DataFinal);
+
+            if (reserva is null)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }
