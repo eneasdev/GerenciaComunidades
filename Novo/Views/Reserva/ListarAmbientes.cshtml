@@ -1,17 +1,57 @@
-﻿@using Novo.Models.ReservaModels
+﻿@using Novo.Models.Domain
+@using Novo.Models.ReservaModels
+
+
 @{
     ViewData["Title"] = "Reservas";
 }
 @model List<ListarAmbientesViewModel>
 
+<form action="/Reserva/ListarAmbientes" method="get">
+
+    <fieldset>
+        <h5>Periodo</h5>
+        <div>
+            <select id="periodo" name="periodo">
+
+                <option selected="selected" value="">Selecione o periodo</option>
+
+                <option value="0912">09:00 - 12:00</option>
+
+                <option value="1316">13:00 - 16:00</option>
+
+                <option value="1619">16:00 - 19:00</option>
+
+                <option value="1922">19:00 - 22:00</option>
+
+            </select>
+        </div>
+        <h5>Dia</h5>
+        <div>
+            @Html.DropDownList("Dia")
+        </div>
+        <div>
+            <p>
+                <input type="submit" value="Submit" />
+            </p>
+        </div>
+    </fieldset>
+</form>
+
 <table class="table">
     <thead>
         <tr>
+            <th>
+                <h3>Registro</h3>
+            </th>
             <th>
                 <h3>Descricao</h3>
             </th>
             <th>
                 <h3>Status</h3>
+            </th>
+            <th>
+                <h3>Quantidade de itens</h3>
             </th>
         </tr>
     </thead>
@@ -20,16 +60,27 @@
         {
             <tr>
                 <td>
+                    @Html.DisplayFor(modelItem => ambiente.IdAmbiente)
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => ambiente.Descricao)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => ambiente.Status)
+                    @if(ambiente.StatusReserva == 0){
+                        @Html.DisplayFor(modelItem => ambiente.Status)
+                    }
+                    else{
+                        @Html.DisplayFor(modelItem => ambiente.StatusReserva)
+                    }
                 </td>
                 <td>
                     @Html.DisplayFor(model => ambiente.QtdItens)
                 </td>
                 <td>
-                    @Html.ActionLink("Reservar", "ReservarAmbiente", new { id = ambiente.IdAmbiente })
+                    @if (ambiente.StatusReserva == Novo.Models.Enums.StatusReserva.Livre)
+                    {
+                        @Html.ActionLink("Reservar", "ReservarAmbiente", new { id = ambiente.IdAmbiente })
+                    }
                 </td>
             </tr>
         }

@@ -1,10 +1,8 @@
-﻿using Novo.Models.ReservaModels;
-
-namespace Novo.Services
+﻿namespace Novo.Services
 {
     public interface IReservaService
     {
         void ResetarReservas();
-        bool ReservaExiste(ReservarAmbienteViewModel candidata);
+        bool ReservaExiste(int idAmbiente, DateTime dataInicial, DateTime dataFinal);
     }
 }

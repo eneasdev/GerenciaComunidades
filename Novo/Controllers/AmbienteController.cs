@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Novo.Infra;
 using Novo.Models.AmbienteModels;
@@ -41,8 +40,9 @@ namespace Novo.Controllers
 
             _context.Ambientes.Add(novoAmbiente);
             _context.SaveChanges();
+            TempData["Message"] = "Ambiente criado com sucesso!";
 
-            return View(ViewData["Ambiente criado com sucesso!"]);
+            return RedirectToAction("Ambientes");
         }
 
         [HttpGet]
@@ -94,7 +94,7 @@ namespace Novo.Controllers
         {
             var ambiente = _context.Ambientes.FirstOrDefault(x => x.IdAmbiente == id);
 
-            if(ambiente is null) return NotFound("Não encontrado.");
+            if (ambiente is null) return NotFound("Não encontrado.");
 
             ambiente.Desativar();
             _context.Ambientes.Update(ambiente);

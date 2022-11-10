@@ -6,6 +6,7 @@ namespace Novo.Models.ReservaModels
     {
         public int IdAmbiente { get; set; }
         public string Descricao { get; set; }
+        public StatusReserva StatusReserva { get; set; }
         public Status Status { get; set; }
         public int QtdItens { get; set; }
     }

@@ -1,5 +1,4 @@
-﻿using System.Text.Json.Serialization;
-using Novo.Models.Enums;
+﻿using Novo.Models.Enums;
 
 namespace Novo.Models.Domain
 {
@@ -18,10 +17,5 @@ namespace Novo.Models.Domain
 
         public int IdAmbiente { get; set; }
         public virtual Ambiente Ambiente { get; set; }
-
-        public void Reservar()
-        {
-            this.Status = Status.Reservado;
-        }
     }
 }

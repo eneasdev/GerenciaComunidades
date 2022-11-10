@@ -4,11 +4,11 @@ namespace Novo.Models.ReservaModels
 {
     public class ReservarAmbienteViewModel
     {
-        public DateTime DataInicial { get; set; }
-        public DateTime DataFinal { get; set; }
+        public string Dia { get; set; }
+        public string Periodo { get; set; }
         public int IdAmbiente { get; set; }
         public string Descricao { get; set; }
         public Status Status { get; set; }
-        public int IdUsuario { get; set; }  
+        public int IdUsuario { get; set; }
     }
 }

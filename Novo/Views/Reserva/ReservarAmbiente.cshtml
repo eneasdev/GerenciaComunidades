@@ -21,20 +21,28 @@
                     @Html.DisplayFor(model => model.Status)
                 </p>
             </div>
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div>
-                <label asp-for="DataInicial" class="control-label"></label><br />
-                <input type="datetime-local" asp-for="DataInicial" data-val-required="Data inicial é obrigatória." value=""/><br />
-                <span asp-validation-for="DataInicial" class="text-danger"></span>
-            </div>
-            <div>
-                <label asp-for="DataFinal" class="control-label"></label><br />
-                <input type="datetime-local" asp-for="DataFinal" data-val-required="Data final é obrigatória." value="" /><br />
-                <span asp-validation-for="DataFinal" class="text-danger"></span>
-            </div>
-            <div>
-                <input type="submit" value="Confirmar" class="btn btn-default btn-primary" />
-            </div>
+            <fieldset>
+                <h3>Periodo</h3>
+                <select id="periodo" name="Periodo">
+
+                    <option selected="selected" value="">Selecione o periodo</option>
+
+                    <option value="0912">09:00 - 12:00</option>
+
+                    <option value="1316">13:00 - 16:00</option>
+
+                    <option value="1619">16:00 - 19:00</option>
+
+                    <option value="1922">19:00 - 22:00</option>
+
+                </select>
+
+                <h3>Dia</h3>
+                @Html.DropDownList("Dia")
+                <div>
+                    <input type="submit" value="Confirmar" />
+                </div>
+            </fieldset>
         </form>
     </div>
 </div>

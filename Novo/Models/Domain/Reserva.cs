@@ -6,7 +6,7 @@ namespace Novo.Models.Domain
     {
         public Reserva(DateTime dataInicial, DateTime dataFinal, int idUsuario, int? idAmbiente = null, int? idItem = null)
         {
-            Status = Status.Reservado;
+            Status = StatusReserva.Reservado;
             IdAmbiente = idAmbiente;
             IdItem = idItem;
             IdUsuario = idUsuario;
@@ -15,7 +15,7 @@ namespace Novo.Models.Domain
         }
 
         public int IdReserva { get; set; }
-        public Status Status { get; set; }
+        public StatusReserva Status { get; set; }
         public DateTime DataInicial { get; set; }
         public DateTime DataFinal { get; set; }
 

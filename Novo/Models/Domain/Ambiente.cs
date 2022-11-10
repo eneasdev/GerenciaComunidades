@@ -4,7 +4,7 @@ namespace Novo.Models.Domain
 {
     public class Ambiente
     {
-        public Ambiente(string descricao, Status status = Status.Livre)
+        public Ambiente(string descricao, Status status = Status.Ativo)
         {
             Descricao = descricao;
             Status = status;
@@ -23,15 +23,10 @@ namespace Novo.Models.Domain
             {
                 for (int i = 0; i < quantidade; i++)
                 {
-                    var descricao = $"Item " + i;
-                    Items.Add(new Item(descricao, Status.Livre));
+                    var descricao = $"Item {i} ";
+                    Items.Add(new Item(descricao, Status.Ativo));
                 }
             }
-        }
-
-        public void Reservar()
-        {
-            this.Status = Status.Reservado;
         }
 
         public void Desativar()

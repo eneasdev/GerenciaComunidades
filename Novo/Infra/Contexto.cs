@@ -44,6 +44,9 @@ namespace Novo.Infra
                 entity.HasMany(d => d.Items)
                     .WithOne(p => p.Ambiente)
                     .HasForeignKey(p => p.IdAmbiente);
+
+                //entity.HasOne(d => d.Reserva)
+                //    .WithOne(x => x.Ambiente);
             });
 
             modelBuilder.Entity<Reserva>(entity =>

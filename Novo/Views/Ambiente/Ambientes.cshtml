@@ -7,6 +7,9 @@
     <thead>
         <tr>
             <th>
+                <h3>Registro</h3>
+            </th>
+            <th>
                 <h3>Descricao</h3>
             </th>
             <th>
@@ -21,6 +24,9 @@
         @foreach (var ambiente in Model)
         {
             <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => ambiente.IdAmbiente)
+                </td>
                 <td>
                     @Html.DisplayFor(modelItem => ambiente.Descricao)
                 </td>
@@ -46,3 +52,4 @@
         }
     </tbody>
 </table>
+<h2>@TempData["Message"]</h2>

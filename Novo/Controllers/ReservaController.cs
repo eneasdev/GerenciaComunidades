@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using Novo.Infra;
 using Novo.Models.Domain;
 using Novo.Models.Enums;
@@ -30,29 +29,91 @@ namespace Novo.Controllers
         }
 
         [HttpGet]
-        public IActionResult ListarAmbientes()
+        public IActionResult ListarAmbientes(string periodo, string dia)
         {
-            var reservas = _context.Reservas
-                .Include(x => x.Ambiente)
-                .Where(x => x.IdAmbiente == x.Ambiente.IdAmbiente).ToList();
+            var ambientesList = new List<ListarAmbientesViewModel>();
+            var reservasList = new List<Reserva>();
 
-            var listaAmbientes = reservas.Select(x => new ListarAmbientesViewModel
+            DateTime dataInicial = default;
+            DateTime dataFinal = default;
+
+            IQueryable<ListarAmbientesViewModel> query;
+
+            if (!string.IsNullOrWhiteSpace(periodo) && !string.IsNullOrWhiteSpace(dia))
             {
-                IdAmbiente = x.IdAmbiente.GetValueOrDefault(),
-                Descricao = x.Ambiente.Descricao,
-                Status = x.Status,
-                QtdItens = x.Ambiente.Items.Count()
-            }).ToList();
+                var periodoInicial = int.Parse(periodo[..2]);
+                var periodoFinal = int.Parse(periodo[2..]);
 
-            var algo = reservas.Distinct();
+                dataInicial = new DateTime(DateTime.Now.Year, DateTime.Now.Month, int.Parse(dia), periodoInicial, 00, 00);
+                dataFinal = new DateTime(DateTime.Now.Year, DateTime.Now.Month, int.Parse(dia), periodoFinal, 00, 00);
 
-            return View(listaAmbientes);
+                query = from a in _context.Ambientes
+                        where a.Status != Status.Desativado && a.Status != Status.Outro
+                        select new ListarAmbientesViewModel()
+                        {
+                            Descricao = a.Descricao,
+                            IdAmbiente = a.IdAmbiente,
+                            QtdItens = a.Items.Count()
+                        };
+
+                var queryRsv = from r in _context.Reservas
+                               where r.DataInicial >= dataInicial && r.DataFinal <= dataFinal
+                               where r.Status == StatusReserva.Reservado
+                               select r;
+
+                ambientesList.AddRange(query.Distinct());
+                reservasList.AddRange(queryRsv.Distinct());
+
+                foreach (var ambiente in ambientesList)
+                {
+                    foreach (var reserva in reservasList)
+                    {
+                        if (reserva.IdAmbiente == ambiente.IdAmbiente)
+                        {
+                            ambiente.StatusReserva = StatusReserva.Reservado;
+                        }
+                        else
+                        {
+                            ambiente.StatusReserva = StatusReserva.Livre;
+                        }
+                    }
+                }
+
+            }
+            else
+            {
+                query = from a in _context.Ambientes
+                        where a.Status != Status.Desativado && a.Status != Status.Outro
+                        select new ListarAmbientesViewModel()
+                        {
+                            Descricao = a.Descricao,
+                            Status = a.Status,
+                            IdAmbiente = a.IdAmbiente,
+                            QtdItens = a.Items.Count()
+                        };
+
+                ambientesList.AddRange(query);
+            }
+
+            var diasMesAtual = DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
+
+            var diasMes = new List<SelectListItem>();
+
+            for (var i = 1; i < diasMesAtual; i++)
+            {
+                diasMes.Add(new SelectListItem(i.ToString(), i.ToString()));
+            }
+
+            ViewBag.Dia = diasMes;
+
+            return View(ambientesList);
         }
 
         [HttpGet]
         public IActionResult ReservarAmbiente(int id)
         {
             var nome = HttpContext.User.Identity.Name;
+
             var user = _context.Usuarios.FirstOrDefault(x => x.Login == nome);
 
             var ambienteBd = _context.Ambientes.FirstOrDefault(x => x.IdAmbiente == id);
@@ -65,33 +126,57 @@ namespace Novo.Controllers
                 IdUsuario = user.IdUsuario
             };
 
+            var diasMesAtual = DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
+
+            var diasMes = new List<SelectListItem>();
+
+            for (var i = 1; i < diasMesAtual; i++)
+            {
+                diasMes.Add(new SelectListItem(i.ToString(), i.ToString()));
+            }
+
+            ViewBag.Dia = diasMes;
+
             return View(ambiente);
         }
 
         [HttpPost]
-        public IActionResult ReservarAmbiente(ReservarAmbienteViewModel reservarAmbienteModel)
+        public IActionResult ReservarAmbiente(ReservarAmbienteViewModel model)
         {
-            var ambiente = _context.Ambientes.FirstOrDefault(x => x.IdAmbiente == reservarAmbienteModel.IdAmbiente);
+            var ambiente = _context.Ambientes.FirstOrDefault(x => x.IdAmbiente == model.IdAmbiente);
 
             if (ambiente is null) return NotFound();
 
+            DateTime dataInicial = default;
+            DateTime dataFinal = default;
 
-            var reservaExiste = _reservaService.ReservaExiste(reservarAmbienteModel);
+            IQueryable<ListarAmbientesViewModel> query;
+
+            if (string.IsNullOrWhiteSpace(model.Periodo) && string.IsNullOrWhiteSpace(model.Dia))
+            {
+                TempData["ErrorMessage"] = "Periodo e dia devem ser informados.";
+                return BadRequest();
+            }
+            var periodoInicial = int.Parse(model.Periodo[..2]);
+            var periodoFinal = int.Parse(model.Periodo[2..]);
+
+            dataInicial = new DateTime(DateTime.Now.Year, DateTime.Now.Month, int.Parse(model.Dia), periodoInicial, 00, 00);
+            dataFinal = new DateTime(DateTime.Now.Year, DateTime.Now.Month, int.Parse(model.Dia), periodoFinal, 00, 00);
+
+            var reservaExiste = _reservaService.ReservaExiste(model.IdAmbiente, dataInicial, dataFinal);
 
             if (reservaExiste)
             {
-                TempData["ErrorMessage"] = "Reserva Inválida";
+                TempData["ErrorMessage"] = "Reserva Inválida.";
                 return BadRequest();
             }
 
             var novaReserva = new Reserva(
-                    dataInicial: reservarAmbienteModel.DataInicial,
-                    dataFinal: reservarAmbienteModel.DataFinal,
-                    idAmbiente: reservarAmbienteModel.IdAmbiente,
-                    idUsuario: reservarAmbienteModel.IdUsuario
+                    dataInicial: dataInicial,
+                    dataFinal: dataFinal,
+                    idAmbiente: model.IdAmbiente,
+                    idUsuario: model.IdUsuario
                 );
-
-            ambiente.Reservar();
 
             _context.Reservas.AddAsync(novaReserva);
             _context.SaveChanges();
@@ -111,7 +196,7 @@ namespace Novo.Controllers
         {
             var reserva = _context.Reservas.FirstOrDefault(x => x.IdReserva == model.IdReserva);
 
-            if(reserva == null) return NotFound();
+            if (reserva == null) return NotFound();
 
             reserva.Atualizar(model.DataInicial, model.DataFinal);
 
@@ -132,7 +217,7 @@ namespace Novo.Controllers
         [HttpGet]
         public IActionResult ListarItems(ListarItemsViewModel viewModel)
         {
-            var ambientes = _context.Ambientes.Where(x => x.Status == Status.Reservado).ToList();
+            var ambientes = _context.Ambientes.Where(x => x.Status == Status.Ativo).ToList();
 
             var model = new ListarItemsViewModel();
 
@@ -162,8 +247,6 @@ namespace Novo.Controllers
                     idItem: reservarItemModel.IdItem,
                     idUsuario: reservarItemModel.IdUsuario
                 );
-
-            item.Reservar();
 
             _context.Reservas.AddAsync(novaReserva);
             _context.SaveChanges();
