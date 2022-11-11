@@ -66,17 +66,26 @@ namespace Novo.Controllers
 
                 foreach (var ambiente in ambientesList)
                 {
-                    foreach (var reserva in reservasList)
+                    if (reservasList.Count > 0)
                     {
-                        if (reserva.IdAmbiente == ambiente.IdAmbiente)
+                        foreach (var reserva in reservasList)
                         {
-                            ambiente.StatusReserva = StatusReserva.Reservado;
-                        }
-                        else
-                        {
-                            ambiente.StatusReserva = StatusReserva.Livre;
+                            if (reserva.IdAmbiente == ambiente.IdAmbiente)
+                            {
+                                ambiente.StatusReserva = StatusReserva.Reservado;
+                            }
+                            else
+                            {
+                                ambiente.StatusReserva = StatusReserva.Livre;
+                            }
                         }
                     }
+                    else
+                    {
+
+                        ambiente.StatusReserva = StatusReserva.Livre;
+                    }
+
                 }
 
             }
@@ -87,12 +96,17 @@ namespace Novo.Controllers
                         select new ListarAmbientesViewModel()
                         {
                             Descricao = a.Descricao,
-                            Status = a.Status,
+                            StatusReserva = StatusReserva.Livre,
                             IdAmbiente = a.IdAmbiente,
                             QtdItens = a.Items.Count()
                         };
 
                 ambientesList.AddRange(query);
+
+                foreach (var ambiente in ambientesList)
+                {
+                    ambiente.StatusReserva = StatusReserva.Livre;
+                }
             }
 
             var diasMesAtual = DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);

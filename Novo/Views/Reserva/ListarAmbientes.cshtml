@@ -66,7 +66,7 @@
                     @Html.DisplayFor(modelItem => ambiente.Descricao)
                 </td>
                 <td>
-                    @if(ambiente.StatusReserva == 0){
+                    @if(ambiente.Status != 0){
                         @Html.DisplayFor(modelItem => ambiente.Status)
                     }
                     else{
