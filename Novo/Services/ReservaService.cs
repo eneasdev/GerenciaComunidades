@@ -5,9 +5,9 @@ namespace Novo.Services
 {
     public class ReservaService : IReservaService
     {
-        private readonly Contexto _context;
+        private readonly GeComuContext _context;
 
-        public ReservaService(Contexto context)
+        public ReservaService(GeComuContext context)
         {
             _context = context;
         }

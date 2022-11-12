@@ -9,6 +9,6 @@ namespace Novo.Models.ReservaModels
         public int IdAmbiente { get; set; }
         public string Descricao { get; set; }
         public Status Status { get; set; }
-        public int IdUsuario { get; set; }
+        public string IdUsuario { get; set; }
     }
 }

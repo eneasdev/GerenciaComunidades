@@ -12,10 +12,10 @@ namespace Novo.Controllers
     [Authorize]
     public class ReservaController : Controller
     {
-        private readonly Contexto _context;
+        private readonly GeComuContext _context;
         private readonly IReservaService _reservaService;
 
-        public ReservaController(Contexto context, IReservaService reservaService)
+        public ReservaController(GeComuContext context, IReservaService reservaService)
         {
             _context = context;
             _reservaService = reservaService;
@@ -128,7 +128,7 @@ namespace Novo.Controllers
         {
             var nome = HttpContext.User.Identity.Name;
 
-            var user = _context.Usuarios.FirstOrDefault(x => x.Login == nome);
+            var user = _context.Usuarios.FirstOrDefault();
 
             var ambienteBd = _context.Ambientes.FirstOrDefault(x => x.IdAmbiente == id);
 
@@ -137,7 +137,7 @@ namespace Novo.Controllers
                 Descricao = ambienteBd.Descricao,
                 Status = ambienteBd.Status,
                 IdAmbiente = id,
-                IdUsuario = user.IdUsuario
+                IdUsuario = user.Id
             };
 
             var diasMesAtual = DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);

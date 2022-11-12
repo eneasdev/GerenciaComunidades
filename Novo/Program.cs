@@ -1,24 +1,27 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Novo.Infra;
+using Novo.Models.Domain;
 using Novo.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
-    {
-        options.Cookie.Name = "UserLoginCookie";
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
-        options.SlidingExpiration = true;
-        options.LoginPath = "/Login/UsuarioLogin";
-    });
+//builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+//    .AddCookie(options =>
+//    {
+//        options.Cookie.Name = "UserLoginCookie";
+//        options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+//        options.SlidingExpiration = true;
+//        options.LoginPath = "/Account/Login";
+//    });
 
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddDbContext<Contexto>(options =>
+builder.Services.AddDbContext<GeComuContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Contexto")));
+
+builder.Services.AddDefaultIdentity<Usuario>(options => options.SignIn.RequireConfirmedAccount = false)
+    .AddEntityFrameworkStores<GeComuContext>();
 
 builder.Services.AddScoped<IReservaService, ReservaService>();
 
@@ -43,5 +46,7 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapRazorPages();
 
 app.Run();

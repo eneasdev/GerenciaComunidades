@@ -7,9 +7,9 @@ namespace Novo.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly Contexto _context;
+        private readonly GeComuContext _context;
 
-        public HomeController(Contexto context)
+        public HomeController(GeComuContext context)
         {
             _context = context;
         }

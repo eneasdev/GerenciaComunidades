@@ -9,9 +9,9 @@ namespace Novo.Controllers
 {
     public class AmbienteController : Controller
     {
-        private readonly Contexto _context;
+        private readonly GeComuContext _context;
 
-        public AmbienteController(Contexto context)
+        public AmbienteController(GeComuContext context)
         {
             _context = context;
         }
