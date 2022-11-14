@@ -25,9 +25,13 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Reserva" asp-action="Reservar">Reservar</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Ambiente" asp-action="Ambientes">Ambiente</a>
-                        </li>
+                        @{
+                            if (User.Identity.IsAuthenticated){
+                                <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Ambiente" asp-action="Ambientes">Manter ambiente</a>
+                            </li>
+                            }
+                        }
                     </ul>
                 </div>
                 <partial name="_LoginPartial" />
