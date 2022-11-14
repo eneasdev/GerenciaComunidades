@@ -5,16 +5,6 @@ using Novo.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-//builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-//    .AddCookie(options =>
-//    {
-//        options.Cookie.Name = "UserLoginCookie";
-//        options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
-//        options.SlidingExpiration = true;
-//        options.LoginPath = "/Account/Login";
-//    });
-
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<GeComuContext>(options =>
@@ -42,6 +32,7 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
 
 app.MapControllerRoute(
     name: "default",

@@ -22,14 +22,18 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Reserva" asp-action="Reservar">Reservar</a>
-                        </li>
                         @{
-                            if (User.Identity.IsAuthenticated){
+                            if (User.Identity.IsAuthenticated)
+                            {
                                 <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Ambiente" asp-action="Ambientes">Manter ambiente</a>
-                            </li>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Reserva" asp-action="ListarAmbientes">Reservar ambientes</a>
+                                </li>
+                                //<li class="nav-item">
+                                //    <a class="nav-link text-dark" asp-area="" asp-controller="Reserva" asp-action="ListarItems">Reservar lugares</a>
+                                //</li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Ambiente" asp-action="Ambientes">Manter ambiente</a>
+                                </li>
                             }
                         }
                     </ul>

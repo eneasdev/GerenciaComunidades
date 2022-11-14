@@ -23,12 +23,6 @@ namespace Novo.Controllers
         }
 
         [HttpGet]
-        public IActionResult Reservar()
-        {
-            return View();
-        }
-
-        [HttpGet]
         public IActionResult ListarAmbientes(string periodo, string dia)
         {
             var ambientesList = new List<ListarAmbientesViewModel>();
@@ -228,56 +222,56 @@ namespace Novo.Controllers
         //    return View(viewModel);
         //}
 
-        [HttpGet]
-        public IActionResult ListarItems(ListarItemsViewModel viewModel)
-        {
-            var ambientes = _context.Ambientes.Where(x => x.Status == Status.Ativo).ToList();
+        //[HttpGet]
+        //public IActionResult ListarItems(ListarItemsViewModel viewModel)
+        //{
+        //    var ambientes = _context.Ambientes.Where(x => x.Status == Status.Ativo).ToList();
 
-            var model = new ListarItemsViewModel();
+        //    var model = new ListarItemsViewModel();
 
-            model.Ambientes = new SelectList(ambientes, "Descricao", "Descricao");
+        //    model.Ambientes = new SelectList(ambientes, "Descricao", "Descricao");
 
-            return View(model);
-        }
+        //    return View(model);
+        //}
 
-        [HttpGet]
-        public IActionResult ReservarItem(int id)
-        {
-            var item = _context.Acentos.FirstOrDefault(x => x.IdItem == id);
+        //[HttpGet]
+        //public IActionResult ReservarItem(int id)
+        //{
+        //    var item = _context.Acentos.FirstOrDefault(x => x.IdItem == id);
 
-            return View(item);
-        }
+        //    return View(item);
+        //}
 
-        [HttpPost]
-        public IActionResult ReservarItem(ReservarItemViewModel reservarItemModel)
-        {
-            var item = _context.Acentos.FirstOrDefault(x => x.IdItem == reservarItemModel.IdItem);
+        //[HttpPost]
+        //public IActionResult ReservarItem(ReservarItemViewModel reservarItemModel)
+        //{
+        //    var item = _context.Acentos.FirstOrDefault(x => x.IdItem == reservarItemModel.IdItem);
 
-            if (item is null) return NotFound();
+        //    if (item is null) return NotFound();
 
-            var novaReserva = new Reserva(
-                    dataInicial: reservarItemModel.DataInicial,
-                    dataFinal: reservarItemModel.DataFinal,
-                    idItem: reservarItemModel.IdItem,
-                    idUsuario: reservarItemModel.IdUsuario
-                );
+        //    var novaReserva = new Reserva(
+        //            dataInicial: reservarItemModel.DataInicial,
+        //            dataFinal: reservarItemModel.DataFinal,
+        //            idItem: reservarItemModel.IdItem,
+        //            idUsuario: reservarItemModel.IdUsuario
+        //        );
 
-            _context.Reservas.AddAsync(novaReserva);
-            _context.SaveChanges();
+        //    _context.Reservas.AddAsync(novaReserva);
+        //    _context.SaveChanges();
 
-            return RedirectToAction("CriarReserva");
-        }
+        //    return RedirectToAction("CriarReserva");
+        //}
 
-        [HttpGet]
-        public IActionResult AtualizarReservaItem(int id)
-        {
-            return View();
-        }
+        //[HttpGet]
+        //public IActionResult AtualizarReservaItem(int id)
+        //{
+        //    return View();
+        //}
 
-        [HttpPost]
-        public IActionResult AtualizarReservaItem()
-        {
-            return View();
-        }
+        //[HttpPost]
+        //public IActionResult AtualizarReservaItem()
+        //{
+        //    return View();
+        //}
     }
 }

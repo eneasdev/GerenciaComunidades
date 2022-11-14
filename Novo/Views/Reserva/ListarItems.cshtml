@@ -1,9 +1,10 @@
-﻿@using Novo.Models.Domain
+﻿@*@using Novo.Models.Domain
+@using Novo.Models.ReservaModels
 
 @{
     ViewData["Title"] = "Reservas";
 }
-@model List<Ambiente>
+@model List<ListarItemsViewModel>
 
 table class="table">
 <thead>
@@ -21,7 +22,7 @@ table class="table">
     {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => ambiente.Descricao)
+                @Html.DisplayFor(modelItem => ambiente.)
             </td>
         </tr>
     }
@@ -29,3 +30,4 @@ table class="table">
 </table>
 <h2>@TempData["Message"]</h2>
 
+*@

@@ -1,12 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Novo.Infra;
 using Novo.Models.AmbienteModels;
 using Novo.Models.Domain;
 using Novo.Models.Enums;
+using System.Data;
 
 namespace Novo.Controllers
 {
+    [Authorize(Roles = "Administrador")]
     public class AmbienteController : Controller
     {
         private readonly GeComuContext _context;
@@ -15,6 +18,7 @@ namespace Novo.Controllers
         {
             _context = context;
         }
+
 
         [HttpGet]
         public IActionResult Ambientes()
