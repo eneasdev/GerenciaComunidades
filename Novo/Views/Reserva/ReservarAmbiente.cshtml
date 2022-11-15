@@ -7,7 +7,7 @@
     <div class="col-md-4">
         <form method="post" asp-action="ReservarAmbiente">
             <input type="hidden" name="IdAmbiente" value="@Model.IdAmbiente"/>
-            <input type="hidden" name="IdUsuario" value="@Model.IdUsuario"/>
+            <input type="hidden" name="IdUsuario" value="@Model.IdUsuario" />
             <h2>Reservar</h2>
             <div>
                 <p>
@@ -22,6 +22,17 @@
                 </p>
             </div>
             <fieldset>
+                @{
+                    var claim = User.Claims.FirstOrDefault(x => x.Value == "Administrador");
+
+                    if (claim != null)
+                    {
+                        <h5>Usuario</h5>
+                        <div>
+                            @Html.DropDownList("Usuario")
+                        </div>
+                    }
+                }
                 <h3>Periodo</h3>
                 <select id="periodo" name="Periodo">
 

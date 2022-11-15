@@ -10,5 +10,6 @@ namespace Novo.Models.ReservaModels
         public string Descricao { get; set; }
         public Status Status { get; set; }
         public string IdUsuario { get; set; }
+        public string Usuario { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Novo.Infra;
@@ -9,17 +9,18 @@ using Novo.Services;
 
 namespace Novo.Controllers
 {
-    [Authorize]
     public class ReservaController : Controller
     {
         private readonly GeComuContext _context;
         private readonly IReservaService _reservaService;
+        private readonly UserManager<Usuario> _userManager;
 
-        public ReservaController(GeComuContext context, IReservaService reservaService)
+        public ReservaController(GeComuContext context, IReservaService reservaService, UserManager<Usuario> userManager)
         {
             _context = context;
             _reservaService = reservaService;
             _reservaService.ResetarReservas();
+            _userManager = userManager;
         }
 
         [HttpGet]
@@ -120,9 +121,9 @@ namespace Novo.Controllers
         [HttpGet]
         public IActionResult ReservarAmbiente(int id)
         {
-            var nome = HttpContext.User.Identity.Name;
+            var name = User.Identity.Name;
 
-            var user = _context.Usuarios.FirstOrDefault();
+            var user = _userManager.FindByNameAsync(name).Result;
 
             var ambienteBd = _context.Ambientes.FirstOrDefault(x => x.IdAmbiente == id);
 
@@ -144,6 +145,27 @@ namespace Novo.Controllers
             }
 
             ViewBag.Dia = diasMes;
+
+            var userRole = _userManager.GetRolesAsync(user).Result;
+
+            if (userRole.Contains("Administrador"))
+            {
+                var usuarios = new List<SelectListItem>();
+
+                var queryy = from usuario in _context.Usuarios
+                             join userRoles in _context.UserRoles on usuario.Id equals userRoles.UserId
+                             join roles in _context.Roles on userRoles.RoleId equals roles.Id
+                             where roles.Id != "1" && roles.Id != "2"
+                             select new SelectListItem
+                             {
+                                 Value = usuario.Id,
+                                 Text = usuario.Email
+                             };
+
+                usuarios.AddRange(queryy);
+
+                ViewBag.Usuario = usuarios;
+            }
 
             return View(ambiente);
         }
@@ -179,15 +201,36 @@ namespace Novo.Controllers
                 return BadRequest();
             }
 
-            var novaReserva = new Reserva(
+            var name = User.Identity.Name;
+
+            var user = _userManager.FindByNameAsync(name).Result;
+
+            var userRole = _userManager.GetRolesAsync(user).Result;
+
+            if (userRole.Contains("Administrador"))
+            {
+                var novaReserva = new Reserva(
+                    dataInicial: dataInicial,
+                    dataFinal: dataFinal,
+                    idAmbiente: model.IdAmbiente,
+                    idUsuario: model.Usuario
+                );
+
+                _context.Reservas.AddAsync(novaReserva);
+                _context.SaveChanges();
+            }
+            else
+            {
+                var novaReserva = new Reserva(
                     dataInicial: dataInicial,
                     dataFinal: dataFinal,
                     idAmbiente: model.IdAmbiente,
                     idUsuario: model.IdUsuario
                 );
 
-            _context.Reservas.AddAsync(novaReserva);
-            _context.SaveChanges();
+                _context.Reservas.AddAsync(novaReserva);
+                _context.SaveChanges();
+            }
 
             TempData["Message"] = "Reservado com sucesso";
             return RedirectToAction("ListarAmbientes");

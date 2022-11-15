@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Novo.Infra;
 
 namespace Novo.Controllers
 {
+    [AllowAnonymous]
     public class HomeController : Controller
     {
 
